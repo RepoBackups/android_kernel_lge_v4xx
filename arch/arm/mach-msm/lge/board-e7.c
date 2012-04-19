@@ -59,6 +59,13 @@
 extern int update_preset_lcdc_lut(void);
 #endif
 
+#ifdef CONFIG_CPU_FREQ_GOV_BADASS_2_PHASE
+int set_two_phase_freq_badass(int cpufreq);
+#endif
+#ifdef CONFIG_CPU_FREQ_GOV_BADASS_3_PHASE
+int set_three_phase_freq_badass(int cpufreq);
+#endif
+
 static struct memtype_reserve msm8226_reserve_table[] __initdata = {
 	[MEMTYPE_SMI] = {
 	},
@@ -232,6 +239,12 @@ void __init msm8226_add_drivers(void)
 		msm_clock_init(&msm8226_rumi_clock_init_data);
 	else
 		msm_clock_init(&msm8226_clock_init_data);
+#ifdef CONFIG_CPU_FREQ_GOV_BADASS_2_PHASE
+	set_two_phase_freq_badass(CONFIG_CPU_FREQ_GOV_BADASS_2_PHASE_FREQ);
+#endif
+#ifdef CONFIG_CPU_FREQ_GOV_BADASS_3_PHASE
+	set_three_phase_freq_badass(CONFIG_CPU_FREQ_GOV_BADASS_3_PHASE_FREQ);
+#endif
 	tsens_tm_init_driver();
 #ifdef CONFIG_BRICKED_THERMAL
 	msm_thermal_init(&msm_thermal_pdata);
