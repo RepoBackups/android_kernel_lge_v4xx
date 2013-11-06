@@ -192,6 +192,26 @@ void __init lge_add_pre_selfd_devices(void)
 }
 #endif /* CONFIG_PRE_SELF_DIAGNOSIS */
 
+#ifdef CONFIG_BRICKED_THERMAL
+static struct msm_thermal_data msm_thermal_pdata = {
+	.sensor_id = 0,
+	.poll_ms = 400,
+	.shutdown_temp = 88,
+
+	.allowed_max_high = 84,
+	.allowed_max_low = 79,
+	.allowed_max_freq = 300000,
+
+	.allowed_mid_high = 81,
+	.allowed_mid_low = 76,
+	.allowed_mid_freq = 600000,
+
+	.allowed_low_high = 79,
+	.allowed_low_low = 73,
+	.allowed_low_freq = 998400,
+};
+#endif
+
 /*
  * Used to satisfy dependencies for devices that need to be
  * run early or in a particular order. Most likely your device doesn't fall
@@ -213,7 +233,11 @@ void __init msm8226_add_drivers(void)
 	else
 		msm_clock_init(&msm8226_clock_init_data);
 	tsens_tm_init_driver();
+#ifdef CONFIG_BRICKED_THERMAL
+	msm_thermal_init(&msm_thermal_pdata);
+#else
 	msm_thermal_device_init();
+#endif
 #ifdef CONFIG_ANDROID_RAM_CONSOLE
 	lge_add_persistent_device();
 #endif
